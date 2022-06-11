@@ -24,3 +24,35 @@ docker_packges:
   - "docker-compose"
 
 bin_dir: "{{ playbook_dir }}/bin"
+downloads_dir: "{{ playbook_dir }}/downloads"
+
+# 在宿主机上启动 binary 或者是 docker
+deployment_method: docker
+
+create_containers: 4
+default_container_name: docker
+default_container_image: luodahui/carrier
+
+# 镜像
+test_image:
+  - name: luodahui/test
+    tag: v1
+    service: test_v1
+
+carrier_image:
+  - name: luodahui/carrier
+    tag: v0.5.0
+    service: carrier_v0.5.0
+
+fighter_image:
+  - name: luodahui/fighter
+    tag: v0.5.0
+    service: fighter_v0.5.0
+
+ice_via_consul_image:
+  - name: luodahui/ice_via_consul
+    tag: v2.0.3
+    service: ice_via_consul_v2.0.3
+
+# true表示：Tar文件每次执行都保存，不管是否已经存在；false表示：Tar文件存在即不保存
+Tar_Save_Every_Time: false

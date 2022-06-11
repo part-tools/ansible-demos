@@ -1,0 +1,20 @@
+---
+
+# 启动容器
+- name: start carrier service
+  docker_container: 
+    name: carrier_service
+    image: "{{ default_container_image }}:v0.5.0"
+    state: started
+    network_mode: "host"
+    restart: yes
+    volumes:
+      - /home/luodahui/test/ansible-demos/install_docker_ubuntu/services/test/carrier.yml:/Carrier/config/carrier.yml
+      - /home/luodahui/test/ansible-demos/install_docker_ubuntu/services/test/p2p_priv_key/p2p_priv_key:/Carrier/config/p2p_priv_key
+    command: /Carrier/carrier --config-file /Carrier/config/carrier.yml
+
+- name: Run carrier container
+  become: True
+  shell:
+    cmd: "docker-compose -f docker-compose.yml up"
+    chdir: /home/luodahui/test/ansible-demos/install_docker_ubuntu/services/carrier

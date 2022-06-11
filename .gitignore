@@ -1,0 +1,5 @@
+install_docker_ubuntu/log/*
+install_docker_ubuntu/downloads/*
+install_docker_ubuntu/fact_files/*
+install_docker_ubuntu/retry_files/*
+.vscode/
