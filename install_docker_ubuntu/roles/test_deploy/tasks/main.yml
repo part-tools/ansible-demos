@@ -1,0 +1,71 @@
+---
+
+- name: create deploy directories
+  file: path={{ item }} state=directory mode=0755
+  with_items:
+  - "{{ deploy_dir }}/test"
+
+- name: "copy test mirror tar file"
+  copy:
+    src: "{{ downloads_dir }}/{{ item.service }}.tar"
+    dest: "{{ deploy_dir }}/test/{{ item.service }}.tar"
+  with_items: "{{ test_image }}"
+
+# 加载镜像tar压缩包 
+- name: Load test image from archive
+  docker_image:
+    name: "{{ item.name }}"
+    tag: "{{ item.tag }}"
+    # push: yes
+    load_path: "{{ deploy_dir }}/test/{{ item.service }}.tar"
+    # source: load
+  with_items: "{{ test_image }}"
+
+
+# - name: set carrier_data_dir facts
+#   set_fact:
+#     carrier_data_dir: "{{ deploy_dir }}/carrier/datadir"
+
+# - name: "Deploy certificates"
+#   copy:
+#     src: "{{ carrier_cert_dir }}/{{ item }}"
+#     dest: "{{ deploy_dir }}/carrier/cert/{{ item }}"
+#     mode: 0600
+#     backup: yes
+#   with_items:
+#     - server.pem 
+#     - server.key
+
+# - name: Set certificate-related facts
+#   set_fact:
+#     carrier_tls_cert: "{{ deploy_dir }}/carrier/cert/server.pem"
+#     carrier_tls_key: "{{ deploy_dir }}/carrier/cert/server.key"
+
+# - name: "copy keytool binary Executable file"
+#   copy:
+#     src: "{{ downloads_dir }}/keytool"
+#     dest: "{{ deploy_dir }}/carrier/keytool"
+#     mode: 0755
+
+# - name: "keytool generates p2p private key file"
+#   shell: "([ ! -e {{ deploy_dir }}/carrier/p2p_priv_key/p2p_priv_key ] && ({{ deploy_dir }}/carrier/keytool genkeypair | awk 'NR==1{print $2}' |xargs echo -n > {{ deploy_dir }}/carrier/p2p_priv_key/p2p_priv_key))|cat"
+#   register: result
+#   changed_when: false
+#   failed_when: result.rc != 0
+
+# - name: set carrier_p2p_private_key facts
+#   set_fact:
+#     carrier_p2p_private_key: "{{ deploy_dir }}/carrier/p2p_priv_key/p2p_priv_key"
+
+# - name: "Generate carrier.yml configuration file based on carrier.yml.j2 template file"
+#   template:
+#     src: "carrier.yml.j2"
+#     dest: "{{ deploy_dir }}/carrier/config/carrier.yml"
+#     mode: 0600
+#     backup: yes
+
+# - name: "copy carrier binary Executable file"
+#   copy:
+#     src: "{{ downloads_dir }}/carrier"
+#     dest: "{{ deploy_dir }}/carrier/carrier"
+#     mode: 0755

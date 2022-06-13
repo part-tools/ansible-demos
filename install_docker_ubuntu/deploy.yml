@@ -1,0 +1,55 @@
+---
+# 在各个节点安装相应服务
+
+# deploy datum cluster
+
+# - name: deploying test
+#   hosts: test
+#   tags:
+#     - test_servers
+#   roles:
+#     - { role: test_deploy, when: enable_deploy_test|default(false) }
+
+# - name: deploying ice via 
+#   hosts: ice_via
+#   tags:
+#     - ice_via_servers
+#   roles:
+#     - { role: ice_via_deploy, when: enable_deploy_ice_via|default(false) }
+
+- name: deploying carrier
+  hosts: carrier
+  tags:
+    - carrier_servers
+  roles:
+    - { role: carrier_deploy, when: enable_deploy_carrier|default(false) }    
+
+
+
+# - name: deploying admin
+#   hosts: admin
+#   tags:
+#     - admin_servers
+#   roles:
+#     - { role: admin_deploy, when: enable_deploy_admin|default(false) }
+
+# - name: deploying data
+#   hosts: data
+#   tags:
+#     - data_servers
+#   roles:
+#     - { role: data_deploy, when: enable_deploy_data|default(false) }
+
+# - name: deploying compute
+#   hosts: compute
+#   tags:
+#     - compute_servers
+#   roles:
+#     - { role: compute_deploy, when: enable_deploy_compute|default(false) }
+
+# - name: deploying consul
+#   hosts: consul
+#   tags:
+#     - consul_servers
+#   roles:
+#     - { role: consul_deploy, when: enable_deploy_consul|default(false) }
