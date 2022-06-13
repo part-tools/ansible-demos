@@ -33,6 +33,7 @@ deployment_method: docker
 
 # docker path
 carrier_docker_path: /Carrier
+carrier_dir_name: carrier_test
 
 # 证书文件，非必改目录
 ice_via_cert_dir:   "{{ playbook_dir }}/config/ice_via_cert"

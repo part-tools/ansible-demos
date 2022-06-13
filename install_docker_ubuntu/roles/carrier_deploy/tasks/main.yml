@@ -3,17 +3,17 @@
 - name: create deploy directories
   file: path={{ item }} state=directory mode=0755
   with_items:
-  - "{{ deploy_dir }}/carrier_test"
-  - "{{ deploy_dir }}/carrier_test/config"
-  - "{{ deploy_dir }}/carrier_test/log"
-  - "{{ deploy_dir }}/carrier_test/cert"
-  - "{{ deploy_dir }}/carrier_test/p2p_priv_key"
-  - "{{ deploy_dir }}/carrier_test/datadir"
+  - "{{ deploy_dir }}/{{carrier_dir_name}}"
+  - "{{ deploy_dir }}/{{carrier_dir_name}}/config"
+  - "{{ deploy_dir }}/{{carrier_dir_name}}/log"
+  - "{{ deploy_dir }}/{{carrier_dir_name}}/cert"
+  - "{{ deploy_dir }}/{{carrier_dir_name}}/p2p_priv_key"
+  - "{{ deploy_dir }}/{{carrier_dir_name}}/datadir"
 
 - name: "copy carrier mirror tar file"
   copy:
     src: "{{ downloads_dir }}/{{ item.service }}.tar"
-    dest: "{{ deploy_dir }}/carrier_test/{{ item.service }}.tar"
+    dest: "{{ deploy_dir }}/{{carrier_dir_name}}/{{ item.service }}.tar"
   with_items: "{{ carrier_image }}"
 
 # 加载镜像tar压缩包 
@@ -22,14 +22,15 @@
     name: "{{ item.name }}"
     tag: "{{ item.tag }}"
     # push: yes
-    load_path: "{{ deploy_dir }}/carrier_test/{{ item.service }}.tar"
+    load_path: "{{ deploy_dir }}/{{carrier_dir_name}}/{{ item.service }}.tar"
     # source: load
+    force: yes
   with_items: "{{ carrier_image }}"
 
 - name: "copy certificates"
   copy:
     src: "{{ carrier_cert_dir }}/{{ item }}"
-    dest: "{{ deploy_dir }}/carrier_test/cert/{{ item }}"
+    dest: "{{ deploy_dir }}/{{carrier_dir_name}}/cert/{{ item }}"
     mode: 0600
     backup: yes
   with_items:
@@ -62,13 +63,13 @@
 - name: "Generate carrier.yml configuration file based on carrier.yml.j2 template file"
   template:
     src: "carrier.yml.j2"
-    dest: "{{ deploy_dir }}/carrier_test/config/carrier.yml"
+    dest: "{{ deploy_dir }}/{{carrier_dir_name}}/config/carrier.yml"
     mode: 0600
     backup: yes
 
 - name: "Generate docker-compose.yml configuration file based on docker-compose.yml.j2 template file"
   template:
     src: "docker-compose.yml.j2"
-    dest: "{{ deploy_dir }}/carrier_test/config/docker-compose.yml"
+    dest: "{{ deploy_dir }}/{{carrier_dir_name}}/config/docker-compose.yml"
     mode: 0600
     backup: yes
