@@ -24,6 +24,14 @@
     force: yes
   with_items: "{{ test_image }}"
 
+- name: "copy script"
+  copy:
+    src: "{{ script_dir }}/{{ item }}"
+    dest: "{{ deploy_dir }}/{{test_dir_name}}/{{ item }}"
+    mode: 0755
+  with_items:
+    - stop_container.sh
+
 - name: "Generate p1_server_config.json configuration file based on p1_server_config.json.j2 template file"
   template:
     src: "p1_server_config.json.j2"

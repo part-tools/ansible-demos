@@ -1,0 +1,216 @@
+# ---
+
+# # 停止所有服务
+# - hosts: ice_via
+#   tags:
+#     - ice_via_servers
+#   tasks:
+#     - name: stop ice via
+#       shell: "{{ deploy_dir }}/ice_via/bin/stop.sh"
+#       register: result
+#       changed_when: false
+#       failed_when: result.rc != 0
+#       when: enable_deploy_ice_via|default(false)
+
+#     - name: wait until the IceGrid port is down
+#       wait_for:
+#         host: "{{ ansible_host }}"
+#         port: "{{ ice_grid_port }}"
+#         state: stopped
+#         msg: "the pump port {{ ice_grid_port }} is not down"
+#       when: enable_deploy_ice_via|default(false)
+
+#     - name: wait until the Glacier2 port is down
+#       wait_for:
+#         host: "{{ ansible_host }}"
+#         port: "{{ ice_glacier2_port }}"
+#         state: stopped
+#         msg: "the pump port {{ ice_glacier2_port }} is not down"
+#       when: enable_deploy_ice_via|default(false)
+
+#     - name: check service ice via status
+#       shell: "{{ deploy_dir }}/ice_via/bin/status.sh"
+#       register: check_result
+#       when: check_service_status
+
+#     - name: ice via status result
+#       debug:
+#         msg: check service ice via status result ,its pid is {{check_result.stdout }}
+#       when: check_service_status
+
+# - hosts: carrier
+#   tags:
+#     - carrier
+#   tasks:
+#     - name: stop carrier
+#       shell: ps -ef | grep "{{ deploy_dir }}/carrier/carrier --config-file {{ deploy_dir }}/carrier/config/carrier.yml" | grep -v "grep" | awk '{print $2}' | xargs -r kill -s TERM
+#       register: result
+#       changed_when: false
+#       failed_when: result.rc != 0
+#       when: enable_deploy_carrier|default(false)
+
+#     - name: wait until the carrier_rpc_port is down
+#       wait_for:
+#         host: "{{ ansible_host }}"
+#         port: "{{ carrier_rpc_port }}"
+#         state: stopped
+#         msg: "the pump port {{ carrier_rpc_port }} is not down"
+#       when: enable_deploy_carrier|default(false)
+
+#     - name: check service carrier status
+#       shell: ps -ef | grep "{{ deploy_dir }}/carrier/carrier --config-file {{ deploy_dir }}/carrier/config/carrier.yml" | grep -v "grep" | awk '{print $2}'
+#       register: check_result
+#       when: check_service_status
+
+#     - name: carrier status result
+#       debug:
+#         msg: check service carrier status result ,its pid is {{check_result.stdout }}
+#       when: check_service_status
+
+# - hosts: admin
+#   tags:
+#     - admin
+#   tasks:
+#     - name: stop admin
+#       shell: "{{ deploy_dir }}/admin/scripts/stop_admin.sh admin"
+#       register: result
+#       changed_when: false
+#       failed_when: result.rc != 0
+#       when: enable_deploy_admin|default(false)
+
+#     - name: wait until the admin_web_port is down
+#       wait_for:
+#         host: "{{ ansible_host }}"
+#         port: "{{ admin_web_port }}"
+#         state: stopped
+#         msg: "the pump port {{ admin_web_port }} is not down"
+#       when: enable_deploy_admin|default(false)
+
+#     - name: check service admin status
+#       shell: ps -ef|grep -v grep|grep {{ deploy_dir }}/admin/admin.jar |grep active=$PROFILE|awk '{print $2}'
+#       register: check_result
+#       when: check_service_status
+
+#     - name: admin status result
+#       debug:
+#         msg: check service admin status result ,its pid is {{check_result.stdout }}
+#       when: check_service_status
+
+# - hosts: data
+#   tags:
+#     - data
+#   tasks:
+#     - name: stop data
+#       shell: ps -ef | grep "{{ deploy_dir }}/miniconda/envs/python375/bin/python -u -m datum.data_svc.main {{ deploy_dir }}/data/config/data.yml" | grep -v "grep" | awk '{print $2}' | xargs -r kill -s TERM
+#       register: result
+#       changed_when: false
+#       failed_when: result.rc != 0
+#       when: enable_deploy_data|default(false)
+
+#     - name: wait until the data port is down
+#       wait_for:
+#         host: "{{ ansible_host }}"
+#         port: "{{ data_port_self }}"
+#         state: stopped
+#         msg: "the pump port {{ data_port_self }} is not down"
+#       when: enable_deploy_data|default(false)
+
+#     - name: check service data status
+#       shell: ps -ef | grep "{{ deploy_dir }}/miniconda/envs/python375/bin/python -u -m datum.data_svc.main {{ deploy_dir }}/data/config/data.yml" | grep -v "grep" | awk '{print $2}'
+#       register: check_result
+#       when: check_service_status
+
+#     - name: data status result
+#       debug:
+#         msg: check service data status result ,its pid is {{check_result.stdout }}
+#       when: check_service_status
+
+# - hosts: compute
+#   tags:
+#     - compute
+#   tasks:
+#     - name: stop compute
+#       shell: ps -ef | grep "{{ deploy_dir }}/miniconda/envs/python375/bin/python -u -m datum.compute_svc.main {{ deploy_dir }}/compute/config/compute.yml" | grep -v "grep" | awk '{print $2}' | xargs -r kill -s TERM
+#       register: result
+#       changed_when: false
+#       failed_when: result.rc != 0
+#       when: enable_deploy_compute|default(false)
+
+#     - name: wait until the compute port is down
+#       wait_for:
+#         host: "{{ ansible_host }}"
+#         port: "{{ compute_port_self }}"
+#         state: stopped
+#         msg: "the pump port {{ compute_port_self }} is not down"
+#       when: enable_deploy_compute|default(false)
+
+#     - name: check service compute status
+#       shell: ps -ef | grep "{{ deploy_dir }}/miniconda/envs/python375/bin/python -u -m datum.compute_svc.main {{ deploy_dir }}/compute/config/compute.yml" | grep -v "grep" | awk '{print $2}'
+#       register: check_result
+#       when: check_service_status
+
+#     - name: compute status result
+#       debug:
+#         msg: check service compute status result ,its pid is {{check_result.stdout }}
+#       when: check_service_status
+
+# - name: stop consul
+#   hosts: consul
+#   tags:
+#     - consul
+#   tasks:
+#     - name: stop consul
+#       shell: ps -ef | grep "{{ deploy_dir }}/consul/consul agent -config-file {{ deploy_dir }}/consul/config/consul.json" | grep -v "grep" | awk '{print $2}' | xargs -r kill -s TERM
+#       register: result
+#       changed_when: false
+#       failed_when: result.rc != 0
+#       when: enable_deploy_consul|default(false)
+
+#     - name: wait until the consul http port is down
+#       wait_for:
+#         host: "{{ ansible_host }}"
+#         port: "{{ consul_http_port_self | trim }}"
+#         state: stopped
+#         msg: "the pump port {{ consul_http_port_self | trim }} is not down"
+#       when: enable_deploy_consul|default(false)
+
+#     - name: check service consul status
+#       shell: ps -ef | grep "{{ deploy_dir }}/consul/consul agent -config-file {{ deploy_dir }}/consul/config/consul.json" | grep -v "grep" | awk '{print $2}'
+#       register: check_result
+#       when: check_service_status
+
+#     - name: consul status result
+#       debug:
+#         msg: check service consul status result ,its pid is {{check_result.stdout }}
+#       when: check_service_status
+
+- name: stop test
+  hosts: test
+  tags:
+    - test
+  tasks:
+    - name: stop test
+      shell: bash {{ deploy_dir }}/{{test_dir_name}}/stop_container.sh {{ item.name }}:{{ item.tag }}
+      register: result
+      changed_when: false
+      failed_when: result.rc != 0
+      when: enable_deploy_test|default(false)
+      with_items: "{{ test_image }}"
+
+    # - name: wait until the consul http port is down
+    #   wait_for:
+    #     host: "{{ ansible_host }}"
+    #     port: "{{ consul_http_port_self | trim }}"
+    #     state: stopped
+    #     msg: "the pump port {{ consul_http_port_self | trim }} is not down"
+    #   when: enable_deploy_consul|default(false)
+
+    # - name: check service consul status
+    #   shell: ps -ef | grep "{{ deploy_dir }}/consul/consul agent -config-file {{ deploy_dir }}/consul/config/consul.json" | grep -v "grep" | awk '{print $2}'
+    #   register: check_result
+    #   when: check_service_status
+
+    # - name: consul status result
+    #   debug:
+    #     msg: check service consul status result ,its pid is {{check_result.stdout }}
+    #   when: check_service_status
