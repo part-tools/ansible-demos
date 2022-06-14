@@ -148,81 +148,80 @@
 #       register: result
 #       failed_when: result.rc != 0
 #       # ignore_errors: True
-#       when: enable_deploy_test|default(false)    
+#       when: enable_deploy_test|default(false)  
 
-- hosts: carrier
+
+- hosts: ice_via
   tags:
-    - carrier_servers
+    - ice_via_servers
   tasks:
-    # - name: start carrier
-    #   shell: "nohup {{ deploy_dir }}/carrier/carrier --config-file {{ deploy_dir }}/carrier/config/carrier.yml >> {{ deploy_dir }}/carrier/log/carrier.log 2>&1 &"
-    #   register: result
-    #   changed_when: false
-    #   failed_when: result.rc != 0
-    #   when: enable_deploy_carrier|default(false)
-
-    # - name: wait until the carrier_rpc_port port is up
-    #   wait_for:
-    #     host: "{{ ansible_host }}"
-    #     port: "{{ carrier_rpc_port }}"
-    #     state: started
-    #     msg: "the node_exporter port {{ carrier_rpc_port }} is not up"
-    #   when: enable_deploy_carrier|default(false)
-
-    # 启动容器
-    # - name: start carrier service
-    #   docker_container: 
-    #     name: carrier_service
-    #     image: "{{ default_container_image }}:v0.5.0"
-    #     state: started
-    #     network_mode: "host"
-    #     restart: yes
-    #     volumes:
-    #       - /home/luodahui/test/ansible-demos/install_docker_ubuntu/services/test/carrier.yml:/Carrier/config/carrier.yml
-    #       - /home/luodahui/test/ansible-demos/install_docker_ubuntu/services/test/p2p_priv_key/p2p_priv_key:/Carrier/config/p2p_priv_key
-    #     command: /Carrier/carrier --config-file /Carrier/config/carrier.yml
-
-    # - name: Run carrier keytool container
+    # ice via和consul在同一个镜像里面，兼容ice via和consul可以部署在同一台机器上，不做检查
+    # - name: Check that the ice_via container already exists and exits
     #   become: True
     #   become_method: sudo
     #   shell:
-    #     cmd: docker-compose -f docker-compose.yml run run_keytool
-    #     chdir: "{{ deploy_dir }}/{{carrier_dir_name}}/config"
+    #     cmd: docker ps -a | grep -w {{ item.name }}:{{ item.tag }} | awk '{print $1 }'
     #   register: result
     #   failed_when: result.rc != 0
-    #   when: enable_deploy_carrier|default(false)
-
-    - name: Check that the Carrier container already exists and exits
-      become: True
-      become_method: sudo
-      shell:
-        cmd: docker ps -a | grep -w {{ item.name }}:{{ item.tag }} | awk '{print $1 }'
-      register: result
-      failed_when: result.rc != 0
-      with_items: "{{ carrier_image }}" 
+    #   with_items: "{{ ice_via_consul_image }}" 
     
-    # - name: debug info  
-    #   debug:
-    #     msg: "Check Info:{{result.results[0].stdout}}"
-    
-    # 启动已经存在但是已经退出的carrier容器
-    - name: Start the exited Carrier container 
-      become: True
-      become_method: sudo
-      shell:
-        cmd: docker start {{result.results[0].stdout}}
-      when: result.results[0].stdout != ''
+    # # 启动已经存在但是已经退出的ice via容器
+    # - name: Start the exited ice via container 
+    #   become: True
+    #   become_method: sudo
+    #   shell:
+    #     cmd: docker start {{result.results[0].stdout}}
+    #   when: result.results[0].stdout != ''
 
-    # 启动一个新的carrier容器
-    - name: Start a new Carrier container 
+    # 启动一个新的ice via容器
+    - name: Start a new ice_via container 
       become: True
       become_method: sudo
       shell:
-        cmd: docker-compose -f docker-compose.yml run -d run_carrier
-        chdir: "{{ deploy_dir }}/{{carrier_dir_name}}/config"
+        cmd: docker-compose -f docker-compose.yml run -d run_ice_via
+        chdir: "{{ deploy_dir }}/{{ice_via_dir_name}}/config"
       register: run_result
       failed_when: run_result.rc != 0
-      when: enable_deploy_carrier|default(false) and result.results[0].stdout == ''
+      when: enable_deploy_ice_via|default(false)
+
+# - hosts: carrier
+#   tags:
+#     - carrier_servers
+#   tasks:
+#     - name: Check that the Carrier container already exists and exits
+#       become: True
+#       become_method: sudo
+#       shell:
+#         cmd: docker ps -a | grep -w {{ item.name }}:{{ item.tag }} | awk '{print $1 }'
+#       register: result
+#       failed_when: result.rc != 0
+#       with_items: "{{ carrier_image }}" 
+    
+#     # - name: debug info  
+#     #   debug:
+#     #     msg: "Check Info:{{result.results[0].stdout}}"
+    
+#     # 启动已经存在但是已经退出的carrier容器
+#     - name: Start the exited Carrier container 
+#       become: True
+#       become_method: sudo
+#       shell:
+#         cmd: docker start {{result.results[0].stdout}}
+#       when: result.results[0].stdout != ''
+
+#     # 启动一个新的carrier容器
+#     - name: Start a new Carrier container 
+#       become: True
+#       become_method: sudo
+#       shell:
+#         cmd: docker-compose -f docker-compose.yml run -d run_carrier
+#         chdir: "{{ deploy_dir }}/{{carrier_dir_name}}/config"
+#       register: run_result
+#       failed_when: run_result.rc != 0
+#       when: enable_deploy_carrier|default(false) and result.results[0].stdout == ''
+
+
+
 
 # - hosts: admin
 #   tags:

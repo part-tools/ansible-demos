@@ -10,26 +10,20 @@
 #   roles:
 #     - { role: test_deploy, when: enable_deploy_test|default(false) }
 
-# - name: deploying ice via 
-#   hosts: ice_via
-#   tags:
-#     - ice_via_servers
-#   roles:
-#     - { role: ice_via_deploy, when: enable_deploy_ice_via|default(false) }
-
-# - name: deploying test
-#   hosts: test
-#   tags:
-#     - test_servers
-#   roles:
-#     - { role: test_deploy, when: enable_deploy_test|default(false) } 
-
-- name: deploying carrier
-  hosts: carrier
+- name: deploying ice via 
+  hosts: ice_via
   tags:
-    - carrier_servers
+    - ice_via_servers
   roles:
-    - { role: carrier_deploy, when: enable_deploy_carrier|default(false) }    
+    - { role: ice_via_deploy, when: enable_deploy_ice_via|default(false) }
+
+
+# - name: deploying carrier
+#   hosts: carrier
+#   tags:
+#     - carrier_servers
+#   roles:
+#     - { role: carrier_deploy, when: enable_deploy_carrier|default(false) }    
 
 
 

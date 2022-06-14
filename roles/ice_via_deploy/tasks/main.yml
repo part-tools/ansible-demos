@@ -1,0 +1,94 @@
+---
+  
+- name: create deploy directories
+  file: path={{ item }} state=directory mode=0755
+  with_items:
+  - "{{ deploy_dir }}/{{ice_via_dir_name}}/config"
+  - "{{ deploy_dir }}/{{ice_via_dir_name}}/cert"
+  - "{{ deploy_dir }}/{{ice_via_dir_name}}/logs"
+  - "{{ deploy_dir }}/{{ice_via_dir_name}}/deploy/lmdb/registry"
+
+- name: "copy ice via mirror tar file"
+  copy:
+    src: "{{ downloads_dir }}/{{ item.service }}.tar"
+    dest: "{{ deploy_dir }}/{{ice_via_dir_name}}/{{ item.service }}.tar"
+  with_items: "{{ ice_via_consul_image }}"
+
+# 加载镜像tar压缩包 
+- name: Load ice via image from archive
+  docker_image:
+    name: "{{ item.name }}"
+    tag: "{{ item.tag }}"
+    # push: yes
+    load_path: "{{ deploy_dir }}/{{ice_via_dir_name}}/{{ item.service }}.tar"
+    # source: load
+    # force: yes
+  with_items: "{{ ice_via_consul_image }}"
+
+- name: "copy certificates"
+  copy:
+    src: "{{ ice_via_cert_dir }}/{{ item }}"
+    dest: "{{ deploy_dir }}/{{ice_via_dir_name}}/cert/{{ item }}"
+    mode: 0600
+    backup: yes
+  with_items:
+    - ca.pem
+    - server.pem
+    - server.key
+    - client.pem
+    - client.key
+
+# # 测试docker容器服务运行时读取的文件使用挂载的方式，但文件和目录在镜像中不存在，测试是否能通过；
+# # 如果不能通过，打包carrier的进行中，必须包括cert目录和证书文件
+# - name: Set certificate-related facts
+#   set_fact:
+#     carrier_tls_cert: "{{ carrier_docker_path }}/cert/server.pem"
+#     carrier_tls_key: "{{ carrier_docker_path }}/cert/server.key"
+
+# - name: set carrier_p2p_private_key facts
+#   set_fact:
+#     carrier_p2p_private_key: "{{ carrier_docker_path }}/p2p_priv_key/p2p_priv_key"
+
+- name: "copy script"
+  copy:
+    src: "{{ script_dir }}/{{ item }}"
+    dest: "{{ deploy_dir }}/{{ice_via_dir_name}}/{{ item }}"
+    mode: 0755
+  with_items:
+    - stop_container.sh
+    - clean_docker.sh
+
+- name: "Generate ice_grid.yml configuration file based on ice_grid.yml.j2 template file"
+  template:
+    src: "ice_grid.yml.j2"
+    dest: "{{ deploy_dir }}/{{ice_via_dir_name}}/config/ice_grid.yml"
+    mode: 0600
+    backup: yes
+
+- name: "Generate ice_glacier2.yml configuration file based on ice_glacier2.yml.j2 template file"
+  template:
+    src: "ice_glacier2.yml.j2"
+    dest: "{{ deploy_dir }}/{{ice_via_dir_name}}/config/ice_glacier2.yml"
+    mode: 0600
+    backup: yes
+
+- name: "Generate ice_glacier2_ssl.yml configuration file based on ice_glacier2_ssl.yml.j2 template file"
+  template:
+    src: "ice_glacier2_ssl.yml.j2"
+    dest: "{{ deploy_dir }}/{{ice_via_dir_name}}/config/ice_glacier2_ssl.yml"
+    mode: 0600
+    backup: yes
+
+- name: "Generate  one_to_one_via.json configuration file based on one_to_one_via.json.j2 template file"
+  template:
+    src: "one_to_one_via.json.j2"
+    dest: "{{ deploy_dir }}/{{ice_via_dir_name}}/config/one_to_one_via.json"
+    mode: 0600
+    backup: yes
+
+- name: "Generate docker-compose.yml configuration file based on docker-compose.yml.j2 template file"
+  template:
+    src: "docker-compose.yml.j2"
+    dest: "{{ deploy_dir }}/{{ice_via_dir_name}}/config/docker-compose.yml"
+    mode: 0600
+    backup: yes

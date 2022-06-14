@@ -31,12 +31,23 @@ deploy_dir: "/home/{{ansible_ssh_user}}"
 # 在宿主机上启动 binary 或者是 docker
 deployment_method: docker
 
-# docker path
+############################## start to set docker path ###################
+# carrier
 carrier_docker_path: /Carrier
 carrier_dir_name: carrier_test
 
+# test
 test_docker_path: /ChannelSDK
 test_dir_name: channel_sdk_test
+
+# ice_via
+ice_via_docker_path: /Ice_Via_Consul/ice_via
+ice_via_dir_name: ice_via
+
+# consul
+consul_docker_path: /Ice_Via_Consul/consul
+consul_dir_name: consul
+############################## end to set docker path ###################
 
 # 证书文件，非必改目录
 script_dir:   "{{ playbook_dir }}/config/script"

@@ -39,18 +39,33 @@
 #       when: check_service_status
 
 
-- name: stop carrier
-  hosts: carrier
+- name: stop ice via
+  hosts: ice_via
   tags:
-    - carrier
+    - ice_via
   tasks:
-    - name: stop carrier
-      shell: bash {{ deploy_dir }}/{{carrier_dir_name}}/stop_container.sh {{ item.name }}:{{ item.tag }}
+    - name: stop ice_via service
+      shell: bash {{ deploy_dir }}/{{ice_via_dir_name}}/stop_container.sh {{ item.name }}:{{ item.tag }}
       register: result
       changed_when: false
       failed_when: result.rc != 0
-      when: enable_deploy_test|default(false)
-      with_items: "{{ carrier_image }}"
+      when: enable_deploy_ice_via|default(false)
+      with_items: "{{ ice_via_consul_image }}"
+
+
+
+# - name: stop carrier
+#   hosts: carrier
+#   tags:
+#     - carrier
+#   tasks:
+#     - name: stop carrier
+#       shell: bash {{ deploy_dir }}/{{carrier_dir_name}}/stop_container.sh {{ item.name }}:{{ item.tag }}
+#       register: result
+#       changed_when: false
+#       failed_when: result.rc != 0
+#       when: enable_deploy_carrier|default(false)
+#       with_items: "{{ carrier_image }}"
 
 # - name: stop test
 #   hosts: test
