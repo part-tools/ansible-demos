@@ -31,6 +31,7 @@
     mode: 0755
   with_items:
     - stop_container.sh
+    - clean_docker.sh
 
 - name: "Generate p1_server_config.json configuration file based on p1_server_config.json.j2 template file"
   template:

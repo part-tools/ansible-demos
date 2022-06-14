@@ -1,0 +1,91 @@
+---
+
+# 销毁集群
+# - hosts: ice_via
+#   tags:
+#     - ice_via_servers
+#   tasks:
+#     - name: clean ice via
+#       file:
+#         path: "{{ deploy_dir }}/ice_via"
+#         state: absent
+#       when: enable_deploy_ice_via|default(false)
+
+# - hosts: consul
+#   tags:
+#     - consul_servers
+#   tasks:
+#     - name: clean consul
+#       file:
+#         path: "{{ deploy_dir }}/consul"
+#         state: absent
+#       when: enable_deploy_consul|default(false)
+
+# - hosts: carrier
+#   tags:
+#     - carrier_servers
+#   tasks:
+#     - name: clean carrier
+#       file:
+#         path: "{{ deploy_dir }}/carrier"
+#         state: absent
+#       when: enable_deploy_carrier|default(false)
+
+# - hosts: data
+#   tags:
+#     - data_servers
+#   tasks:
+#     - name: clean data
+#       file:
+#         path: "{{ deploy_dir }}/data"
+#         state: absent
+#       when: enable_deploy_data|default(false)
+
+
+
+
+
+# - hosts: test
+#   tags:
+#     - test_servers
+#   tasks:
+#     - name: Clear the exited test container and test image
+#       become: True
+#       become_method: sudo
+#       shell: bash {{ deploy_dir }}/{{test_dir_name}}/clean_docker.sh {{ item.name }} {{ item.tag }}
+#       register: result
+#       failed_when: result.rc != 0
+#       when: enable_deploy_test|default(false)
+#       with_items: "{{ test_image }}"
+
+#     - name: Clear the test directory 
+#       file:
+#         path: "{{ deploy_dir }}/{{test_dir_name}}"
+#         state: absent
+#       when: enable_deploy_test|default(false)
+
+
+- hosts: carrier
+  tags:
+    - carrier_servers
+  tasks:
+    - name: Clear the exited carrier container and carrier image
+      become: True
+      become_method: sudo
+      # shell: "[ -f {{ deploy_dir }}/{{carrier_dir_name}}/clean_docker.sh ] && 
+      #   bash {{ deploy_dir }}/{{carrier_dir_name}}/clean_docker.sh {{ item.name }} {{ item.tag }}"
+      shell: "[ -f {{ deploy_dir }}/{{carrier_dir_name}}/clean_docker.sh ] && 
+        bash {{ deploy_dir }}/{{carrier_dir_name}}/clean_docker.sh {{ item.name }} {{ item.tag }}"
+      register: result
+      when: enable_deploy_carrier|default(false)
+      # rc=1：shell isn't exist
+      failed_when: result.rc != 0 and result.rc != 1
+      with_items: "{{ carrier_image }}"
+
+    - name: Clear the carrier directory 
+      become: True
+      become_method: sudo
+      file:
+        path: "{{ deploy_dir }}/{{carrier_dir_name}}"
+        state: absent
+      when: enable_deploy_carrier|default(false)

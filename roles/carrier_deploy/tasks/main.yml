@@ -67,6 +67,7 @@
     mode: 0755
   with_items:
     - stop_container.sh
+    - clean_docker.sh
 
 - name: "Generate carrier.yml configuration file based on carrier.yml.j2 template file"
   template:
