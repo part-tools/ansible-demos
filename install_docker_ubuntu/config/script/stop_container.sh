@@ -19,9 +19,9 @@ echo -e "\n\n${YELLOW}Stop docker container:$container ${NC}"
 docker ps -a | grep -w $container
 if [ $? == 0 ]; then
     echo -e "${YELLOW}======================start to stop container=================${NC}"
-    docker stop $(docker ps -a | grep $container | awk '{print $1 }')
+    docker stop $(docker ps -a | grep -w $container | awk '{print $1 }')
     # 删除容器
-    docker rm $(docker ps -a | grep $container | awk '{print $1 }')
+    # docker rm $(docker ps -a | grep -w $container | awk '{print $1 }')
 fi
 
 echo -e "${GREEN}=======================list docker processes=====================${NC}"
