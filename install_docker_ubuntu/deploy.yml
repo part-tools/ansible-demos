@@ -17,12 +17,19 @@
 #   roles:
 #     - { role: ice_via_deploy, when: enable_deploy_ice_via|default(false) }
 
-- name: deploying carrier
-  hosts: carrier
+- name: deploying test
+  hosts: test
   tags:
-    - carrier_servers
+    - test_servers
   roles:
-    - { role: carrier_deploy, when: enable_deploy_carrier|default(false) }    
+    - { role: test_deploy, when: enable_deploy_test|default(false) } 
+
+# - name: deploying carrier
+#   hosts: carrier
+#   tags:
+#     - carrier_servers
+#   roles:
+#     - { role: carrier_deploy, when: enable_deploy_carrier|default(false) }    
 
 
 

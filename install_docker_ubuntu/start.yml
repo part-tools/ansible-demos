@@ -135,58 +135,78 @@
 #         msg: "the node_exporter port {{ ice_glacier2_port }} is not up"
 #       when: enable_deploy_ice_via|default(false)
 
-- hosts: carrier
+- hosts: test
   tags:
-    - carrier_servers
+    - test_servers
   tasks:
-    # - name: start carrier
-    #   shell: "nohup {{ deploy_dir }}/carrier/carrier --config-file {{ deploy_dir }}/carrier/config/carrier.yml >> {{ deploy_dir }}/carrier/log/carrier.log 2>&1 &"
-    #   register: result
-    #   changed_when: false
-    #   failed_when: result.rc != 0
-    #   when: enable_deploy_carrier|default(false)
-
-    # - name: wait until the carrier_rpc_port port is up
-    #   wait_for:
-    #     host: "{{ ansible_host }}"
-    #     port: "{{ carrier_rpc_port }}"
-    #     state: started
-    #     msg: "the node_exporter port {{ carrier_rpc_port }} is not up"
-    #   when: enable_deploy_carrier|default(false)
-
-    # 启动容器
-    # - name: start carrier service
-    #   docker_container: 
-    #     name: carrier_service
-    #     image: "{{ default_container_image }}:v0.5.0"
-    #     state: started
-    #     network_mode: "host"
-    #     restart: yes
-    #     volumes:
-    #       - /home/luodahui/test/ansible-demos/install_docker_ubuntu/services/test/carrier.yml:/Carrier/config/carrier.yml
-    #       - /home/luodahui/test/ansible-demos/install_docker_ubuntu/services/test/p2p_priv_key/p2p_priv_key:/Carrier/config/p2p_priv_key
-    #     command: /Carrier/carrier --config-file /Carrier/config/carrier.yml
-
-    # - name: Run carrier keytool container
-    #   become: True
-    #   become_method: sudo
-    #   shell:
-    #     cmd: docker-compose -f docker-compose.yml run run_keytool
-    #     chdir: "{{ deploy_dir }}/{{carrier_dir_name}}/config"
-    #   register: result
-    #   failed_when: result.rc != 0
-    #   when: enable_deploy_carrier|default(false)
-
-    - name: Run carrier service container
+    - name: Run test service container
       become: True
       become_method: sudo
       shell:
-        cmd: docker-compose -f docker-compose.yml run run_carrier
-        chdir: "{{ deploy_dir }}/{{carrier_dir_name}}/config"
+        cmd: docker-compose -f docker-compose.yml run -d test_run_server
+        chdir: "{{ deploy_dir }}/{{test_dir_name}}/config"
       register: result
       failed_when: result.rc != 0
       # ignore_errors: True
-      when: enable_deploy_carrier|default(false)      
+      when: enable_deploy_test|default(false)    
+
+# - hosts: carrier
+#   tags:
+#     - carrier_servers
+#   tasks:
+#     # - name: start carrier
+#     #   shell: "nohup {{ deploy_dir }}/carrier/carrier --config-file {{ deploy_dir }}/carrier/config/carrier.yml >> {{ deploy_dir }}/carrier/log/carrier.log 2>&1 &"
+#     #   register: result
+#     #   changed_when: false
+#     #   failed_when: result.rc != 0
+#     #   when: enable_deploy_carrier|default(false)
+
+#     # - name: wait until the carrier_rpc_port port is up
+#     #   wait_for:
+#     #     host: "{{ ansible_host }}"
+#     #     port: "{{ carrier_rpc_port }}"
+#     #     state: started
+#     #     msg: "the node_exporter port {{ carrier_rpc_port }} is not up"
+#     #   when: enable_deploy_carrier|default(false)
+
+#     # 启动容器
+#     # - name: start carrier service
+#     #   docker_container: 
+#     #     name: carrier_service
+#     #     image: "{{ default_container_image }}:v0.5.0"
+#     #     state: started
+#     #     network_mode: "host"
+#     #     restart: yes
+#     #     volumes:
+#     #       - /home/luodahui/test/ansible-demos/install_docker_ubuntu/services/test/carrier.yml:/Carrier/config/carrier.yml
+#     #       - /home/luodahui/test/ansible-demos/install_docker_ubuntu/services/test/p2p_priv_key/p2p_priv_key:/Carrier/config/p2p_priv_key
+#     #     command: /Carrier/carrier --config-file /Carrier/config/carrier.yml
+
+#     # - name: Run carrier keytool container
+#     #   become: True
+#     #   become_method: sudo
+#     #   shell:
+#     #     cmd: docker-compose -f docker-compose.yml run run_keytool
+#     #     chdir: "{{ deploy_dir }}/{{carrier_dir_name}}/config"
+#     #   register: result
+#     #   failed_when: result.rc != 0
+#     #   when: enable_deploy_carrier|default(false)
+
+#     - name: Run carrier service container
+#       become: True
+#       become_method: sudo
+#       shell:
+#         cmd: docker-compose -f docker-compose.yml run -d run_carrier
+#         chdir: "{{ deploy_dir }}/{{carrier_dir_name}}/config"
+#       register: result
+#       failed_when: result.rc != 0
+#       # ignore_errors: True
+#       when: enable_deploy_carrier|default(false)     
+
+
+
+
+    
 
 # - hosts: admin
 #   tags:

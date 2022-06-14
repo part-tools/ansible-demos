@@ -1,0 +1,12 @@
+# yaml 配置
+version: "3.6"
+services:
+  test_run_server:
+    image: "luodahui/channel-sdk:v2.0.3"
+    container_name: test_server
+    restart: always
+    volumes:
+      - {{ deploy_dir }}/{{test_dir_name}}/config/p1_server_config.json:{{test_docker_path}}/test/python/2/3/p1_server_config.json
+      - {{ deploy_dir }}/{{test_dir_name}}/log:{{test_docker_path}}/log
+    network_mode: "host"
+    command: /bin/bash -c "python3 {{test_docker_path}}/test/python/server.py > {{test_docker_path}}/log/chanel_sdk.log 2>&1"

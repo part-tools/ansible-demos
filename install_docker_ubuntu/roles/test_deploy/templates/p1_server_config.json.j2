@@ -1,0 +1,46 @@
+{
+	"TASK_ID": "task:0x0710cb",
+	"PING_TIME": 0.5,
+	"SEND_TIMEOUT": 10,
+	"CONNECT_TIMEOUT": 100,
+	"NODE_INFO": [
+		{
+			"NODE_ID": "p0",
+			"ADDRESS": "{{ groups['consul'][0] }}:10000",
+			"GRICER2": "VIA0",
+			"ICEGRID": "GRID0"
+		},
+		{
+			"NODE_ID": "p1",
+			"ADDRESS": "0.0.0.0:10001",
+			"GRICER2": "VIA0",
+			"ICEGRID": "GRID0"
+		}
+	],
+	"GRICER2_INFO": {
+		"VIA0": {
+			"APPNAME": "ChannelGlacier2",
+			"IP": "127.0.0.1",
+			"PORT": "10031"
+		}
+	},
+	"ICE_GRID_INFO": {
+		"GRID0": {
+			"APPNAME": "ChannelIceGrid",
+			"IP": "127.0.0.1",
+			"PORT": "10032"
+		}
+	},
+	"DATA_NODES": [
+		"p0",
+		"p1"
+	],
+	"COMPUTATION_NODES": {
+		"p0": "P0",
+		"p1": "P1"
+	},
+	"RESULT_NODES": [
+		"p0",
+		"p1"
+	]
+}
