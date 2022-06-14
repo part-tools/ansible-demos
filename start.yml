@@ -213,8 +213,8 @@
         cmd: docker start {{result.results[0].stdout}}
       when: result.results[0].stdout != ''
 
-    # 启动不存在的carrier容器
-    - name: Run carrier service container
+    # 启动一个新的carrier容器
+    - name: Start a new Carrier container 
       become: True
       become_method: sudo
       shell:
