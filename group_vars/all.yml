@@ -2,26 +2,9 @@
 
 log_file: /var/log/docker_install.log
 
-# docker configure
-docker:
-  users: user1
-  registry_mirrors: "https://hub.docker.com/"
-
-docker_required_packages:
-  - "apt-transport-https"
-  - "ca-certificates"
-  - "curl"
-  - "gnupg-agent"
-  - "software-properties-common"
-  - "python3-pip"
-  - "python3-setuptools"
-docker_gpg_url: https://download.docker.com/linux/ubuntu/gpg
-docker_repo: deb https://download.docker.com/linux/ubuntu focal stable
-docker_packges:
-  - "docker-ce"
-  - "docker-ce-cli"
-  - "containerd.io"
-  - "docker-compose"
+# consul的 key-value 选项 
+storage_ip: 161.117.189.27
+storage_port: 9090
 
 bin_dir: "{{ playbook_dir }}/bin"
 downloads_dir: "{{ playbook_dir }}/downloads"
@@ -66,6 +49,28 @@ carrier_rpc_ip: "{{ listen_all_ip }}"
 carrier_grpc_gateway_ip: "{{ listen_all_ip }}"
 carrier_p2p_listen_ip: "{{ listen_all_ip }}"
 
+
+####################### start docker configure #############################
+docker:
+  users: user1
+  registry_mirrors: "https://hub.docker.com/"
+
+docker_required_packages:
+  - "apt-transport-https"
+  - "ca-certificates"
+  - "curl"
+  - "gnupg-agent"
+  - "software-properties-common"
+  - "python3-pip"
+  - "python3-setuptools"
+docker_gpg_url: https://download.docker.com/linux/ubuntu/gpg
+docker_repo: deb https://download.docker.com/linux/ubuntu focal stable
+docker_packges:
+  - "docker-ce"
+  - "docker-ce-cli"
+  - "containerd.io"
+  - "docker-compose"
+
 # 镜像
 # test_image:
 #   - name: luodahui/test
@@ -94,6 +99,8 @@ ice_via_consul_image:
 
 # true表示：Tar文件每次执行都保存，不管是否已经存在；false表示：Tar文件存在即不保存
 Tar_Save_Every_Time: false
+
+####################### end docker configure #############################
 
 # consul agent 信息
 consul_zip_name: "{{ consul_download_url.split('/')[-1] | trim }}"

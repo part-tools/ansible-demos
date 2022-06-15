@@ -39,18 +39,31 @@
 #       when: check_service_status
 
 
-- name: stop ice via
-  hosts: ice_via
+- name: stop consul
+  hosts: consul
   tags:
-    - ice_via
+    - consul
   tasks:
-    - name: stop ice_via service
-      shell: bash {{ deploy_dir }}/{{ice_via_dir_name}}/stop_container.sh {{ item.name }}:{{ item.tag }}
+    - name: stop consul service
+      shell: bash {{ deploy_dir }}/{{consul_dir_name}}/stop_container.sh {{ item.name }}:{{ item.tag }}
       register: result
       changed_when: false
       failed_when: result.rc != 0
       when: enable_deploy_ice_via|default(false)
       with_items: "{{ ice_via_consul_image }}"
+
+# - name: stop ice via
+#   hosts: ice_via
+#   tags:
+#     - ice_via
+#   tasks:
+#     - name: stop ice_via service
+#       shell: bash {{ deploy_dir }}/{{ice_via_dir_name}}/stop_container.sh {{ item.name }}:{{ item.tag }}
+#       register: result
+#       changed_when: false
+#       failed_when: result.rc != 0
+#       when: enable_deploy_ice_via|default(false)
+#       with_items: "{{ ice_via_consul_image }}"
 
 
 

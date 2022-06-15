@@ -64,28 +64,75 @@
 #         state: absent
 #       when: enable_deploy_test|default(false)
 
-
-- hosts: carrier
+- hosts: consul
   tags:
-    - carrier_servers
+    - consul_service
   tasks:
-    - name: Clear the exited carrier container and carrier image
+    - name: Clear the exited consul container and consul image
       become: True
       become_method: sudo
-      # shell: "[ -f {{ deploy_dir }}/{{carrier_dir_name}}/clean_docker.sh ] && 
-      #   bash {{ deploy_dir }}/{{carrier_dir_name}}/clean_docker.sh {{ item.name }} {{ item.tag }}"
-      shell: "[ -f {{ deploy_dir }}/{{carrier_dir_name}}/clean_docker.sh ] && 
-        bash {{ deploy_dir }}/{{carrier_dir_name}}/clean_docker.sh {{ item.name }} {{ item.tag }}"
+      shell: "[ -f {{ deploy_dir }}/{{consul_dir_name}}/clean_docker.sh ] && 
+        bash {{ deploy_dir }}/{{consul_dir_name}}/clean_docker.sh {{ item.name }} {{ item.tag }}"
       register: result
-      when: enable_deploy_carrier|default(false)
+      when: enable_deploy_consul|default(false)
       # rc=1：shell isn't exist
       failed_when: result.rc != 0 and result.rc != 1
-      with_items: "{{ carrier_image }}"
+      with_items: "{{ ice_via_consul_image }}"
 
-    - name: Clear the carrier directory 
+    - name: Clear the consul directory 
       become: True
       become_method: sudo
       file:
-        path: "{{ deploy_dir }}/{{carrier_dir_name}}"
+        path: "{{ deploy_dir }}/{{consul_dir_name}}"
         state: absent
-      when: enable_deploy_carrier|default(false)
+      when: enable_deploy_consul|default(false)
+
+
+# - hosts: ice_via
+#   tags:
+#     - ice_via_service
+#   tasks:
+#     - name: Clear the exited ice_via container and ice_via image
+#       become: True
+#       become_method: sudo
+#       shell: "[ -f {{ deploy_dir }}/{{ice_via_dir_name}}/clean_docker.sh ] && 
+#         bash {{ deploy_dir }}/{{ice_via_dir_name}}/clean_docker.sh {{ item.name }} {{ item.tag }}"
+#       register: result
+#       when: enable_deploy_ice_via|default(false)
+#       # rc=1：shell isn't exist
+#       failed_when: result.rc != 0 and result.rc != 1
+#       with_items: "{{ ice_via_consul_image }}"
+
+#     - name: Clear the ice_via directory 
+#       become: True
+#       become_method: sudo
+#       file:
+#         path: "{{ deploy_dir }}/{{ice_via_dir_name}}"
+#         state: absent
+#       when: enable_deploy_ice_via|default(false)
+
+
+# - hosts: carrier
+#   tags:
+#     - carrier_servers
+#   tasks:
+#     - name: Clear the exited carrier container and carrier image
+#       become: True
+#       become_method: sudo
+#       # shell: "[ -f {{ deploy_dir }}/{{carrier_dir_name}}/clean_docker.sh ] && 
+#       #   bash {{ deploy_dir }}/{{carrier_dir_name}}/clean_docker.sh {{ item.name }} {{ item.tag }}"
+#       shell: "[ -f {{ deploy_dir }}/{{carrier_dir_name}}/clean_docker.sh ] && 
+#         bash {{ deploy_dir }}/{{carrier_dir_name}}/clean_docker.sh {{ item.name }} {{ item.tag }}"
+#       register: result
+#       when: enable_deploy_carrier|default(false)
+#       # rc=1：shell isn't exist
+#       failed_when: result.rc != 0 and result.rc != 1
+#       with_items: "{{ carrier_image }}"
+
+#     - name: Clear the carrier directory 
+#       become: True
+#       become_method: sudo
+#       file:
+#         path: "{{ deploy_dir }}/{{carrier_dir_name}}"
+#         state: absent
+#       when: enable_deploy_carrier|default(false)

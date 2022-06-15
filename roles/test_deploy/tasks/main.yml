@@ -24,6 +24,17 @@
     force: yes
   with_items: "{{ test_image }}"
 
+# 重命名docker image 
+# - name: Rename the Docker image
+#   become: True
+#   become_method: sudo
+#   shell:
+#     cmd: "docker tag $(docker images | grep -w {{ item.name }} | grep -w {{ item.tag }}
+#        | awk '{print $3}') {{ item.service }}:{{ item.tag }}"
+#   register: run_result
+#   failed_when: run_result.rc != 0
+#   with_items: "{{ test_image }}"
+
 - name: "copy script"
   copy:
     src: "{{ script_dir }}/{{ item }}"
