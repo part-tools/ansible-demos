@@ -15,4 +15,7 @@ services:
       - -c
       - |
 
-          {{consul_docker_path}}/consul agent -config-file {{consul_docker_path}}/consul.json 
+          {{consul_docker_path}}/consul agent -config-file {{consul_docker_path}}/consul.json &&
+          "if [ '{{ansible_host}}' != '{{consul_leader_ip}}' ] && [ {{consul_number_int}} > 1 ] && [ '{{enable_deploy_consul}}' == 'True' ];then
+            {{ deploy_dir }}/consul/consul join --http-addr {{ansible_host}}:{{consul_http_port_self | trim}} {{consul_leader_ip}}:{{consul_leader_serf_lan_port}} fi;"
+

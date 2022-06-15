@@ -14,6 +14,9 @@ deploy_dir: "/home/{{ansible_ssh_user}}"
 # 在宿主机上启动 binary 或者是 docker
 deployment_method: docker
 
+# 等待超时时间(s)
+wait_for_timeout: 10
+
 ############################## start to set docker path ###################
 # carrier
 carrier_docker_path: /Carrier
@@ -30,6 +33,14 @@ ice_via_dir_name: ice_via
 # consul
 consul_docker_path: /Ice_Via_Consul/consul
 consul_dir_name: consul
+
+# data
+fighter_dir_name: fighter_test
+data_local_path: "{{fighter_dir_name}}/data"
+fighter_docker_path: /Fighter
+
+# compute
+compute_local_path: "{{fighter_dir_name}}/compute"
 ############################## end to set docker path ###################
 
 # 证书文件，非必改目录

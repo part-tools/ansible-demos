@@ -24,7 +24,6 @@
 #   roles:
 #     - { role: ice_via_deploy, when: enable_deploy_ice_via|default(false) }
 
-
 # - name: deploying carrier
 #   hosts: carrier
 #   tags:
@@ -32,19 +31,10 @@
 #   roles:
 #     - { role: carrier_deploy, when: enable_deploy_carrier|default(false) }    
 
-
-
-# - name: deploying admin
-#   hosts: admin
-#   tags:
-#     - admin_servers
-#   roles:
-#     - { role: admin_deploy, when: enable_deploy_admin|default(false) }
-
 # - name: deploying data
 #   hosts: data
 #   tags:
-#     - data_servers
+#     - data_service
 #   roles:
 #     - { role: data_deploy, when: enable_deploy_data|default(false) }
 
@@ -55,9 +45,9 @@
 #   roles:
 #     - { role: compute_deploy, when: enable_deploy_compute|default(false) }
 
-# - name: deploying consul
-#   hosts: consul
+# - name: deploying admin
+#   hosts: admin
 #   tags:
-#     - consul_servers
+#     - admin_servers
 #   roles:
-#     - { role: consul_deploy, when: enable_deploy_consul|default(false) }
+#     - { role: admin_deploy, when: enable_deploy_admin|default(false) }
