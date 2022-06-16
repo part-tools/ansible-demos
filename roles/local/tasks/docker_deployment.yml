@@ -126,4 +126,3 @@
     chdir: "{{ downloads_dir }}"
   with_items: "{{ ice_via_consul_image }}"
   when: (mirror_saved.results[0].stdout | int == 0 ) or ( Tar_Save_Every_Time )
-

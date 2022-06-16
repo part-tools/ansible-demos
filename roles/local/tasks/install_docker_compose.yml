@@ -1,0 +1,11 @@
+---
+
+- name: Install Docker Compose
+  copy:
+    src: "{{ bin_dir }}/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    mode: u+x,g+x,o+x
+    backup: yes
+  with_items:
+    - docker-compose
+  

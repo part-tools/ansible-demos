@@ -5,6 +5,4 @@
   hosts: all
   any_errors_fatal: true
   roles:
-    # - check_environment
-    - check_docker
-
+    - check_environment

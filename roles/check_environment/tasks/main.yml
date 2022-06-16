@@ -50,6 +50,22 @@
   include_tasks: install_docker.yml
   when: docker_exist.stdout | int == 0
 
+- name: Set docker registry mirrors
+  become: True
+  become_method: sudo
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+    backup: true
+
+- name: Restart docker systemd
+  become: True
+  become_method: sudo
+  systemd:
+    name: docker
+    state: restarted
+    daemon_reload: yes
+
 # 检查docker-compose
 - name: Check if docker-compose installed
   shell: docker-compose --version | wc -l

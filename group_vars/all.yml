@@ -28,11 +28,12 @@ test_dir_name: channel_sdk_test
 
 # ice_via
 ice_via_docker_path: /Ice_Via_Consul/ice_via
-ice_via_dir_name: ice_via
+ice_via_consul_dir_name: ice_via_consul
+ice_via_local_path: "{{ice_via_consul_dir_name}}/ice_via"
 
 # consul
 consul_docker_path: /Ice_Via_Consul/consul
-consul_dir_name: consul
+consul_local_path: "{{ice_via_consul_dir_name}}/consul"
 
 # data
 fighter_dir_name: fighter_test

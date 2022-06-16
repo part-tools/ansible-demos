@@ -26,15 +26,6 @@
   retries: 3
   ignore_errors: True
 
-# - name: Update apt and install docker tools
-#   apt: name={{ item }} state=latest update_cache=yes
-#   loop: ['docker-compose', 'docker-ce-cli', 'containerd.io']
-#   become: true
-#   retries: 3
-  # ignore_errors: True
-  # register: result
-  # failed_when: result.rc != 0
-
 - name: Install Docker Module for Python
   pip:
     name: docker
@@ -45,15 +36,3 @@
     group: docker
     append: yes
   with_items: "{{ docker.users }}"
-
-- name: Set docker registry mirrors
-  template:
-    src: daemon.json.j2
-    dest: /etc/docker/daemon.json
-    backup: true
-
-- name: Restart docker systemd
-  systemd:
-    name: docker
-    state: restarted
-    daemon_reload: yes
