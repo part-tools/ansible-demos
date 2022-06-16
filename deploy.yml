@@ -10,12 +10,12 @@
 #   roles:
 #     - { role: test_deploy, when: enable_deploy_test|default(false) }
 
-- name: deploying consul
-  hosts: consul
-  tags:
-    - consul_service
-  roles:
-    - { role: consul_deploy, when: enable_deploy_consul|default(false) }
+# - name: deploying consul
+#   hosts: consul
+#   tags:
+#     - consul_service
+#   roles:
+#     - { role: consul_deploy, when: enable_deploy_consul|default(false) }
 
 # - name: deploying ice via 
 #   hosts: ice_via
@@ -31,12 +31,12 @@
 #   roles:
 #     - { role: carrier_deploy, when: enable_deploy_carrier|default(false) }    
 
-# - name: deploying data
-#   hosts: data
-#   tags:
-#     - data_service
-#   roles:
-#     - { role: data_deploy, when: enable_deploy_data|default(false) }
+- name: deploying data
+  hosts: data
+  tags:
+    - data_service
+  roles:
+    - { role: data_deploy, when: enable_deploy_data|default(false) }
 
 # - name: deploying compute
 #   hosts: compute
