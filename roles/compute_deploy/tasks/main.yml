@@ -4,12 +4,12 @@
   file: path={{ item }} state=directory mode=0755
   with_items:
   - "{{ deploy_dir }}/{{fighter_dir_name}}"
-  - "{{ deploy_dir }}/{{data_local_path}}"
-  - "{{ deploy_dir }}/{{data_local_path}}/config"
-  - "{{ deploy_dir }}/{{data_local_path}}/log"
-  - "{{ deploy_dir }}/{{data_local_path}}/cert"
-  - "{{ deploy_dir }}/{{data_local_path}}/data_root"
-  - "{{ deploy_dir }}/{{data_local_path}}/result_root"
+  - "{{ deploy_dir }}/{{compute_local_path}}"
+  - "{{ deploy_dir }}/{{compute_local_path}}/config"
+  - "{{ deploy_dir }}/{{compute_local_path}}/log"
+  - "{{ deploy_dir }}/{{compute_local_path}}/cert"
+  - "{{ deploy_dir }}/{{compute_local_path}}/contract_work_dir"
+  - "{{ deploy_dir }}/{{compute_local_path}}/result_root"
 
 # data和compute公用
 - name: "Check whether the Fighter image has been copied"
@@ -42,14 +42,13 @@
 
 - name: set directory facts
   set_fact:
-    data_root: "{{ fighter_docker_path }}/data_root"
     code_root_dir: "{{ fighter_docker_path }}/contract_work_dir"
     results_root_dir: "{{ fighter_docker_path }}/result_root"
 
 - name: "Deploy certificates"
   copy:
     src: "{{ data_cert_dir }}/{{ item }}"
-    dest: "{{ deploy_dir }}/{{data_local_path}}/cert/{{ item }}"
+    dest: "{{ deploy_dir }}/{{compute_local_path}}/cert/{{ item }}"
     mode: 0600
     backup: yes
   with_items:
@@ -58,19 +57,19 @@
 
 - name: Set certificate-related facts
   set_fact:
-    base_path: "{{ fighter_docker_path }}/data/cert/"
+    base_path: "{{ fighter_docker_path }}/compute/cert/"
 
 - name: "copy configuration file"
   template:
-    src: "data.yml.j2"
-    dest: "{{ deploy_dir }}/{{data_local_path}}/config/data.yml"
+    src: "compute.yml.j2"
+    dest: "{{ deploy_dir }}/{{compute_local_path}}/config/compute.yml"
     mode: 0600
     backup: yes
-
+    
 - name: "copy script"
   copy:
     src: "{{ script_dir }}/{{ item }}"
-    dest: "{{ deploy_dir }}/{{data_local_path}}/{{ item }}"
+    dest: "{{ deploy_dir }}/{{compute_local_path}}/{{ item }}"
     mode: 0755
   with_items:
     - stop_container.sh
@@ -79,6 +78,6 @@
 - name: "Generate docker-compose.yml configuration file based on docker-compose.yml.j2 template file"
   template:
     src: "docker-compose.yml.j2"
-    dest: "{{ deploy_dir }}/{{data_local_path}}/config/docker-compose.yml"
+    dest: "{{ deploy_dir }}/{{compute_local_path}}/config/docker-compose.yml"
     mode: 0600
     backup: yes

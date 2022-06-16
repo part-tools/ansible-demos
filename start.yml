@@ -164,34 +164,50 @@
 #       failed_when: run_result.rc != 0
 #       when: enable_deploy_carrier|default(false) and result.results[0].stdout == ''
 
-- name: start data
-  hosts: data
+# - name: start data
+#   hosts: data
+#   tags:
+#     - data_service
+#   tasks:
+#     - name: Start a new fighter data container 
+#       become: True
+#       become_method: sudo
+#       shell:
+#         cmd: docker-compose -f docker-compose.yml run -d run_data
+#         chdir: "{{ deploy_dir }}/{{data_local_path}}/config"
+#       register: run_result
+#       failed_when: run_result.rc != 0
+#       when: enable_deploy_data|default(false)
+
+#     - name: wait until the data port port is up
+#       wait_for:
+#         host: "{{ ansible_host }}"
+#         port: "{{ data_port_self }}"
+#         state: started
+#         msg: "the node_exporter port {{ data_port_self }} is not up"
+#         timeout: "{{wait_for_timeout|int}}"
+#       when: enable_deploy_data|default(false)
+
+- name: start compute
+  hosts: compute
   tags:
-    - data_service
+    - compute_service
   tasks:
-    - name: Start a new fighter data container 
+    - name: Start a new fighter compute container 
       become: True
       become_method: sudo
       shell:
-        cmd: docker-compose -f docker-compose.yml run -d run_data
-        chdir: "{{ deploy_dir }}/{{data_local_path}}/config"
+        cmd: docker-compose -f docker-compose.yml run -d run_compute
+        chdir: "{{ deploy_dir }}/{{compute_local_path}}/config"
       register: run_result
       failed_when: run_result.rc != 0
-      when: enable_deploy_data|default(false)
+      when: enable_deploy_compute|default(false)
 
-    # - name: start data service
-    #   shell: "nohup {{ deploy_dir }}/data/start_v3_service.sh {{ deploy_dir }}/data/config/data.yml data python3 &"
-    #   register: result
-    #   changed_when: false
-    #   failed_when: result.rc != 0
-    #   when: enable_deploy_data|default(false)
-
-    - name: wait until the data port port is up
+    - name: wait until the compute port is up
       wait_for:
         host: "{{ ansible_host }}"
-        port: "{{ data_port_self }}"
+        port: "{{ compute_port_self }}"
         state: started
-        msg: "the node_exporter port {{ data_port_self }} is not up"
+        msg: "the node_exporter port {{ compute_port_self }} is not up"
         timeout: "{{wait_for_timeout|int}}"
-      when: enable_deploy_data|default(false)
-
+      when: enable_deploy_compute|default(false)

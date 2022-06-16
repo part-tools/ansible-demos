@@ -31,19 +31,19 @@
 #   roles:
 #     - { role: carrier_deploy, when: enable_deploy_carrier|default(false) }    
 
-- name: deploying data
-  hosts: data
-  tags:
-    - data_service
-  roles:
-    - { role: data_deploy, when: enable_deploy_data|default(false) }
-
-# - name: deploying compute
-#   hosts: compute
+# - name: deploying data
+#   hosts: data
 #   tags:
-#     - compute_servers
+#     - data_service
 #   roles:
-#     - { role: compute_deploy, when: enable_deploy_compute|default(false) }
+#     - { role: data_deploy, when: enable_deploy_data|default(false) }
+
+- name: deploying compute
+  hosts: compute
+  tags:
+    - compute_servers
+  roles:
+    - { role: compute_deploy, when: enable_deploy_compute|default(false) }
 
 # - name: deploying admin
 #   hosts: admin
